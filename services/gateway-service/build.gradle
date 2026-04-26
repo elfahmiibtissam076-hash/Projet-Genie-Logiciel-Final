@@ -1,0 +1,56 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.ecommerce'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+// Définition de la version de Spring Cloud compatible avec Spring Boot 3.2.x
+ext {
+	set('springCloudVersion', "2023.0.1")
+}
+
+dependencies {
+	// API Gateway : Utilise Spring WebFlux (Non-blocking) au lieu de WebMVC
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+
+	// Client Eureka : Permet à la Gateway de s'enregistrer et de découvrir d'autres services
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	// Sécurité OAuth2 : Pour la gestion de l'authentification avec Keycloak
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// Resource Server : Permet à la Gateway de valider les Jetons JWT envoyés par Keycloak
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+	// Lombok : Pour réduire le code boilerplate (Getters/Setters)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Dépendances pour les tests unitaires et réactifs
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+// Gestion des versions des dépendances Spring Cloud
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

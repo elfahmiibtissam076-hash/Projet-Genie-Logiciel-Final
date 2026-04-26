@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+ 
+  postgres-db:
+    image: postgres
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=incident_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123  
+
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.0
+    container_name: keycloak
+    command: start-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin

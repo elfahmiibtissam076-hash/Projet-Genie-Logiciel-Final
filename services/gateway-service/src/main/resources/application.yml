@@ -1,0 +1,36 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: incident-route
+          uri: lb://INCIDENT-SERVICE
+          predicates:
+            - Path=/incidents/**
+          filters:
+            - TokenRelay=
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: incident-service
+            client-secret: LkUnzDd15Zp9oSNjRf7Qz9fVPO4gNbEl
+            scope: openid, profile, email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/incident-realm
+
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/incident-realm
+      # --------------------------------------------------
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
